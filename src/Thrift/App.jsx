@@ -150,7 +150,7 @@ const App = () => {
                 {viewProfile && <div className='flex flex-col gap- mr-auto w-full h-[55%]'>
                     <Profile viewProfile={viewProfile} closeAccount={closeAccount} setViewProfile={setViewProfile} />
                 </div>}
-                <div className={`mr-auto ${!openForm ? "h-[100%]" : "h-[44%]"} opacity-0 md:opacity-100 w-full absolute bottom-0 bg-teal-800/80 rounded`}>
+                <div className={`mr-auto h-[44%] opacity-0 md:opacity-100 w-full absolute bottom-0 bg-teal-800/80 rounded`}>
                         <img className='w-full h-full rounded' src={frame} alt="" />
                 </div>
             </div>
