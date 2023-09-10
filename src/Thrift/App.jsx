@@ -8,7 +8,7 @@ import MembershipForm from './memberShipform'
 
 function MemberSection({children}){
     return(
-        <div className='flex flex-col rounded h-[470px] overflow-scroll divide-y-2 divide-dotted divide-black text-black'>
+        <div className='flex flex-col rounded h-[500px] overflow-scroll divide-y-2 divide-dotted divide-black text-black'>
             <div className='font-semibold text-center bg-teal-800/70 py-2 text-lg bg-teal-950 text-yellow-400'>Members👬</div>
                 {children}
         </div>
@@ -146,11 +146,11 @@ const App = () => {
     <div className='gap-[2px]  flex flex-col bg-yellow-300'>
         <Header memberlist={memberlist}/>
         <div className={`flex-col md:flex-row flex gap-[2px]`}>
-            <div className='md:w-[50%] relative border lg:w-[70%] '>
-                {viewProfile && <div className='flex flex-col gap- mr-auto w-full h-[55%]'>
+            <div className='md:w-[50%] relative flex flex-col border lg:w-[70%] '>
+                {viewProfile && <div className='flex flex-col gap-[2px] mr-auto w-full h-[55%]'>
                     <Profile viewProfile={viewProfile} closeAccount={closeAccount} setViewProfile={setViewProfile} />
                 </div>}
-                <div className={`mr-auto h-[44%] opacity-0 md:opacity-100 w-full absolute bottom-0 bg-teal-800/80 rounded`}>
+                <div className={`mr-auto ${viewProfile ? "h-[44%]" : "h-[100%]"} opacity-0 md:opacity-100 w-full absolute bottom-0 bg-teal-800/80 rounded`}>
                         <img className='w-full h-full rounded' src={frame} alt="" />
                 </div>
             </div>
