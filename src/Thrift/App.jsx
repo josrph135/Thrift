@@ -3,79 +3,10 @@ import MemberData from './data'
 import image from '../image/th.jpg'
 import frame from '../image/savings.jpg'
 import MembershipForm from './memberShipform'
-
-
-
-function MemberSection({children}){
-    return(
-        <div className='flex flex-col rounded h-[500px] overflow-scroll divide-y-2 divide-dotted divide-black text-black'>
-            <div className='font-semibold text-center bg-teal-800/70 py-2 text-lg bg-teal-950 text-yellow-400'>Members👬</div>
-                {children}
-        </div>
-    )
-}
-
-function B0tton({children, onClick}){
-    return(
-        <button onClick={onClick} className='text-sm px-2 py-1 rounded-lg bg-yellow-200 hover:bg-inherit hover:border-yellow border border-yellow-300 hover:text-yellow-300 duration-500'>{children}</button>
-    )
-}
-
-function Template({card, handleProfile, viewProfile, setMemberlist}){
-    const [addedFund, setAddedFund] = useState("")
-    const {FullName, bal, phoneNum, email, profession} = card
-    const isSelected = card.id === viewProfile?.id
-    const [add, setAdd] = useState(null)
-    
-    function addCapital(card){
-        setAdd(open => open?.id === card.id ? null : card)
-    }
-
-    function handleAdd(current){
-        setMemberlist(members => members.map(member => member.id === current.id ? {...member, bal: addedFund + member.bal} : member))
-    }
-
-    function submitAddedFund(event){
-        event.preventDefault()
-        if(!addedFund)return;
-        handleAdd
-        setAdd(null)
-    }
-    return(
-        <div className='flex flex-col pb-8 bg-teal-800/80'>
-            <div className='flex flex-row gap-4 p-4'>
-                <div>
-                    <img className='w-12 h-12 rounded-full' src={image} alt="" />
-                </div>
-                <div>
-                    <h2 className='font-semibold'>{FullName}    </h2>
-                    <p className='text-sm font-semibold'>{profession}</p>
-                    <p className='text-xs font-semibold'>{email}</p>
-                    <p className='font-semibold text-xs'>{phoneNum}</p>
-                </div>
-                <div className='ml-auto'>
-                    <p className='font-semibold'>${bal}</p>
-                </div>
-            </div>
-            <div className='flex flex-row w-2/3 ml-auto pr-4 sm:pr-4 sm:gap-2 gap-8  whitespace-nowrap'>
-                <B0tton  onClick={() => addCapital(card)}>Add to balance</B0tton>
-                <B0tton  onClick={() => handleProfile(card)}>view profile</B0tton>
-            </div>
-            {add && <form onSubmit={submitAddedFund} className='pt-3 mt-auto flex flex-row gap-4 justify-center'>
-                <label htmlFor="newAddition">Enter Amount:</label>
-                <input 
-                    type="number" 
-                    id='newAddition'
-                    value={addedFund}
-                    onChange={(e) => setAddedFund(Number(e.target.value))}
-                    className='w-[100px] pl-2 bg-yellow-200 outline-none rounded'
-                />
-                <B0tton  onClick={() => handleAdd(card)}>Add</B0tton>
-            </form>}
-            
-        </div>
-    )
-}
+import MemberSection from './memberSection'
+import Template from "./template"
+import B0tton from './button'
+import Withdraw from './withdrawal'
 
 function Header({memberlist}){
 
@@ -112,8 +43,8 @@ function Profile({viewProfile, closeAccount, setViewProfile}){
                     <p>Phone Num: {viewProfile.phoneNum}</p>
                 </div>
                 <div className='font-semibold gap-2 flex flex-col'>
-                    <p className='flex flex-col text-center'><span>Account Balance:</span> <span>${viewProfile.bal}</span></p>
-                    <div className='flex items-end mt-auto ml-auto'>
+                    <p className='absolute top-4 left-2 md:left-4 lg:left-8 flex flex-row gap-2 text-center'><span>Balance: </span> <span> ${viewProfile.bal}</span></p>
+                    <div className='flex gap-2 flex-col lg:flex-row items-end mt-auto ml-auto'>
                        <B0tton onClick={() => closeAccount(viewProfile)}>Close Account</B0tton>
                     </div>
                 </div>
@@ -127,6 +58,7 @@ const App = () => {
     const [openForm, setOpenform] = useState(false)
     const [memberlist, setMemberlist] = useState(MemberData)
     const [viewProfile, setViewProfile] = useState(null)
+    const [openWithdrawForm, setOpenWithdrawform] = useState(false)
     function handleProfile(card){
         setViewProfile(prev => card)
     }
@@ -136,6 +68,8 @@ const App = () => {
     }
 
     function closeAccount(viewed){
+        if(viewed.bal < 0) window.alert("you need to clear your debt");
+        if(viewed.bal < 0)return;        
         const alert = prompt("Are you sure you want to close your account?")
         if(alert === "yes")
         setMemberlist(member => member.filter(selected => selected.id !== viewed.id))
@@ -148,14 +82,12 @@ const App = () => {
         <div className={`flex-col md:flex-row flex gap-[2px]`}>
             <div className='md:w-[50%] relative flex flex-col border lg:w-[70%] '>
                 {viewProfile && <div className='flex flex-col gap-[2px] mr-auto w-full h-[55%]'>
-                    <Profile viewProfile={viewProfile} closeAccount={closeAccount} setViewProfile={setViewProfile} />
+                    <Profile viewProfile={viewProfile} closeAccount={closeAccount} setViewProfile={setViewProfile} setOpenWithdrawform={setOpenWithdrawform}/>
                 </div>}
                 <div className={`mr-auto ${viewProfile ? "h-[44%]" : "h-[100%]"} opacity-0 md:opacity-100 w-full absolute bottom-0 bg-teal-800/80 rounded`}>
                         <img className='w-full h-full rounded' src={frame} alt="" />
                 </div>
             </div>
-            
-            
             <div className='flex flex-col md:ml-auto gap-1 md:w-[50%] lg:w-[30%] h-[90%]'>
                 <MemberSection>
                     {memberlist.map(member => 
@@ -165,6 +97,7 @@ const App = () => {
                             handleProfile={handleProfile}
                             viewProfile={viewProfile}
                             setMemberlist={setMemberlist} 
+                            setOpenWithdrawform={setOpenWithdrawform}
                         />
 
                     )}
@@ -174,11 +107,9 @@ const App = () => {
             </div>
         </div>
         
-        {openForm && <div className='fixed top-0 left-0 right-0 bottom-0 bg-black/80 justify-center items-center'>
-                <MembershipForm addMember={addMember} setOpenform={setOpenform}/>
-                <div onClick={() => setOpenform(false)} className='bottom-3  md:bottom-12 right-3  md:right-12 fixed font-semibold text-lg px-2 sm:px-4 py-1 sm:py-2 ring-2 rounded-full hover:ring-white hover:text-white duration-300 bg-teal-800 text-black'>X</div>
-        </div>}    
+        <MembershipForm addMember={addMember} setOpenform={setOpenform} openForm={openForm}/>   
 
+        {openWithdrawForm && <Withdraw setOpenWithdrawform={setOpenWithdrawform} profile={viewProfile}/>}
     </div>
   )
 }
