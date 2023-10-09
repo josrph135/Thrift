@@ -77,20 +77,21 @@ const App = () => {
     }
 
   return (
-    <div className='gap-[2px]  flex flex-col bg-yellow-300'>
+    <div className='gap-[2px] md:h-[100vh] max-h-[2000px] flex flex-col'>
         <Header memberlist={memberlist}/>
-        <div className={`flex-col md:flex-row flex gap-[2px]`}>
-            <div className='md:w-[50%] relative flex flex-col border lg:w-[70%] '>
-                {viewProfile && <div className='flex flex-col gap-[2px] mr-auto w-full h-[55%]'>
+        <div className={`grid lg:grid-flow-col h-fit lg:grid-cols-5 gap-[2px]`}>
+            <div className='relative h-full lg:col-span-3 grid lg:grid-flow-row border '>
+                {viewProfile && <div className=''>
                     <Profile viewProfile={viewProfile} closeAccount={closeAccount} setViewProfile={setViewProfile} setOpenWithdrawform={setOpenWithdrawform}/>
                 </div>}
-                <div className={`mr-auto ${viewProfile ? "h-[44%]" : "h-[100%]"} opacity-0 md:opacity-100 w-full absolute bottom-0 bg-teal-800/80 rounded`}>
+                <div className={`mr-auto ${viewProfile ? "h-[58%]" : "h-[100%]"} hidden lg:block  w-full absolute bottom-0 bg-teal-800/80 rounded`}>
                         <img className='w-full h-full rounded' src={frame} alt="" />
                 </div>
             </div>
-            <div className='flex flex-col md:ml-auto gap-1 md:w-[50%] lg:w-[30%] h-[90%]'>
-                <MemberSection>
-                    {memberlist.map(member => 
+            <div className='flex lg:col-span-2 flex-col gap-1 h-full'>
+                <div>
+                    <MemberSection>
+                        {memberlist.map(member => 
                         <Template 
                             key={member.id}
                             card={member}
@@ -99,10 +100,9 @@ const App = () => {
                             setMemberlist={setMemberlist} 
                             setOpenWithdrawform={setOpenWithdrawform}
                         />
-
-                    )}
-                </MemberSection>
-
+                        )}
+                    </MemberSection>
+                </div>
                 <button onClick={() => setOpenform(open => !open)} className='w-full bg-teal-950 py-[4px] text-teal-500 font-semibold duration-300 hover:bg-opacity-75'>Join</button>
             </div>
         </div>
